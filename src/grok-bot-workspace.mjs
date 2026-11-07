@@ -12,8 +12,36 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const PORT = Number(process.env.PORT || 4581);
 
+const EMBEDDED_FILES = {
+  "campus-opportunities.csv": `Event,Date and time,Location,Audience,Registration URL,Source URL,Checked at
+Global Hack Week: Builders Week,2026-11-06 10:00 EST to 2026-11-12 13:00 EST,Online (Digital),Students and Working Professionals,https://events.mlh.com/events/14729-global-hack-week-builders-week,https://www.mlh.com/seasons/2027/events,2026-11-07T16:20:00Z
+HackUTD 2026: Ripple Effect,2026-11-14 09:00 CST to 2026-11-15 17:00 CST,Richardson TX (In-Person),University Students,https://www.mlh.com/seasons/2027/events,https://www.mlh.com/seasons/2027/events,2026-11-07T16:20:00Z
+BostonHacks 2026,2026-11-14 10:00 EST to 2026-11-15 16:00 EST,Boston MA (In-Person),University Students,https://www.mlh.com/seasons/2027/events,https://www.mlh.com/seasons/2027/events,2026-11-07T16:20:00Z
+MadHacks Fall 2026,2026-11-21 09:00 CST to 2026-11-22 15:00 CST,Madison WI (In-Person),University Students,https://www.mlh.com/seasons/2027/events,https://www.mlh.com/seasons/2027/events,2026-11-07T16:20:00Z
+Global Hack Week: AI & Agents Week,2026-12-04 10:00 EST to 2026-12-10 13:00 EST,Online (Digital),All Developers and Students,https://ghw.mlh.com/,https://www.mlh.com/seasons/2027/events,2026-11-07T16:20:00Z`,
+  "browser-workflow-result.csv": `Input_Filter,Event_Name,Dates,Format_Location,Source_URL,Checked_At,Stop_Rule_Status
+topic=AI_and_Cloud;month=Nov_2026,Global Hack Week: Builders Week,Nov 6 - Nov 12 2026,Online Digital,https://www.mlh.com/seasons/2027/events,2026-11-07T16:21:10Z,STOPPED_BEFORE_REGISTRATION
+topic=AI_and_Cloud;month=Nov_2026,Tiger Data Real-Time AI Workshop,Nov 8 2026 14:00 EST,Online Livestream,https://www.mlh.com/events/global-hack-week-builders-week,2026-11-07T16:21:10Z,STOPPED_BEFORE_REGISTRATION
+topic=AI_and_Cloud;month=Nov_2026,Auth0 for AI Agents Deep Dive,Nov 9 2026 16:00 EST,Online Livestream,https://www.mlh.com/events/global-hack-week-builders-week,2026-11-07T16:21:10Z,STOPPED_BEFORE_REGISTRATION
+topic=AI_and_Cloud;month=Nov_2026,SpaceXSI Grok Bot Multi-Agent Relay Lab,Nov 10 2026 18:00 EST,Online Livestream,https://www.mlh.com/partners/spacexsi,2026-11-07T16:21:10Z,STOPPED_BEFORE_REGISTRATION`,
+  "launch-desk/run-of-show.csv": `Time,Owner,Action,Status
+2026-11-06 10:00 EST,MLH Community Team,Open Builders Week check-in at events.mlh.com/events/14729-global-hack-week-builders-week,Completed
+2026-11-07 11:00 EST,Source Editor Bot,Verify public challenge tracks and partner links into launch-desk/source-brief.md,Completed
+2026-11-07 11:15 EST,Launch Producer Bot,Draft 168-word announcement-draft.md and 6-row run-of-show.csv from approved brief,Completed
+2026-11-07 11:25 EST,Source Editor Bot,Run factual QA audit comparing draft deliverables against source-brief.md,Completed
+2026-11-08 14:00 EST,Track Mentors,Host technical check-in across GitHub Copilot and SpaceXSI Grok Bot tracks,Scheduled
+2026-11-12 13:00 EST,MLH Operations,Close Builders Week challenge submissions and lock gallery entries,Scheduled`,
+  "launch-desk/source-brief.md": `# Source Brief: MLH Global Hack Week: Builders Week\n- Event: Global Hack Week: Builders Week (Nov 6-12, 2026)\n- Host: Major League Hacking (MLH)\n- Tracks: GitHub, SpaceXSI, Auth0, Tiger Data`,
+  "launch-desk/announcement-draft.md": `Builders, MLH Global Hack Week: Builders Week is officially live online from Friday, November 6, 2026 at 10:00 AM EST through Thursday, November 12, 2026 at 1:00 PM EST. Hosted by Major League Hacking (MLH), this free digital week brings hands-on engineering tracks across four partner ecosystems so student and professional developers can ship working software.\n\nIn the GitHub track, you can complete GitHub Skills exercises, configure custom cloud devcontainers with GitHub Codespaces, and build applications with GitHub Copilot. In the SpaceXSI track, you can scaffold mini-apps and benchmark frontier models in Cursor alongside persistent multi-agent workflows in Grok Bot. In the Auth0 track, you can implement Universal Login, Token Vault delegated API access, CIBA asynchronous authorization, and Auth0 FGA document access control. In the Tiger Data track, you can launch auto-partitioned hypertables, connect AI agents via MCP, stream live telemetry dashboards, and run hybrid pgvector searches.\n\nCheck in now at https://events.mlh.com/events/14729-global-hack-week-builders-week and submit your challenge builds at https://www.mlh.com/events/global-hack-week-builders-week/challenges before November 12 at 1:00 PM EST.`,
+  "launch-desk/qa-notes.md": `# QA Audit Notes: Source Editor Verification\n\n- **Audited Files**: \`launch-desk/announcement-draft.md\` and \`launch-desk/run-of-show.csv\`\n- **Reference Brief**: \`launch-desk/source-brief.md\`\n- **Status**: **Pass**\n\n## Verification Checklist\n1. **Word Count Check**: \`announcement-draft.md\` is 166 words (strictly within the required 120- to 180-word range).\n2. **Source Fidelity Check**: Dates (\`Nov 6, 2026 10:00 AM EST\` to \`Nov 12, 2026 1:00 PM EST\`), host (\`Major League Hacking\`), price (\`Free\`), and all four partner tracks (\`GitHub\`, \`SpaceXSI\`, \`Auth0\`, \`Tiger Data\`) match \`source-brief.md\` with zero unsupported claims.\n3. **Run of Show Schema Check**: \`run-of-show.csv\` contains 6 rows (exceeding the 5-row minimum) and uses the exact required columns \`Time,Owner,Action,Status\`.\n4. **External Action Safeguard**: Nothing was sent, published, or modified on any external system.`
+};
+
 function readFileSafe(relPath) {
-  return fs.readFileSync(path.join(ROOT, relPath), "utf8");
+  try {
+    return fs.readFileSync(path.join(ROOT, relPath), "utf8");
+  } catch {
+    return EMBEDDED_FILES[relPath] || "";
+  }
 }
 
 function parseCsv(csvText) {
@@ -303,6 +331,8 @@ export function requestHandler(req, res) {
 </body>
 </html>`);
 }
+
+export default requestHandler;
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   http.createServer(requestHandler).listen(PORT, () => {
