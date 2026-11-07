@@ -23,7 +23,7 @@ function parseCsv(csvText) {
   return { headers, rows };
 }
 
-const server = http.createServer((req, res) => {
+export function requestHandler(req, res) {
   const urlObj = new URL(req.url, `http://localhost:${PORT}`);
   const view = urlObj.searchParams.get("view") || "c3";
 
@@ -281,10 +281,17 @@ const server = http.createServer((req, res) => {
     <div class="top-bar">
       <div>
         <strong style="font-size:15px;">Grok Bot Persistent Agent Workspace (${view.toUpperCase()})</strong>
-        <span style="font-size:12px;color:#94a3b8;margin-left:8px;">Prince Jain (@princejain756)</span>
+        <span style="font-size:12px;color:#94a3b8;margin-left:8px;">Prince Jain (@princejain756) · Live at grok-bot.prince.sh</span>
       </div>
-      <div style="font-family:monospace;font-size:11.5px;color:#34d399;border:1px solid #10b981;padding:4px 10px;border-radius:6px;">
-        🖥️ Agent Computer Online
+      <div style="display:flex;gap:6px;align-items:center;">
+        <a href="?view=c3" style="text-decoration:none;font-size:11px;padding:4px 8px;border-radius:5px;background:#1e293b;color:#38bdf8;">C3: Bot</a>
+        <a href="?view=c4" style="text-decoration:none;font-size:11px;padding:4px 8px;border-radius:5px;background:#1e293b;color:#38bdf8;">C4: Task</a>
+        <a href="?view=c5" style="text-decoration:none;font-size:11px;padding:4px 8px;border-radius:5px;background:#1e293b;color:#38bdf8;">C5: DB</a>
+        <a href="?view=c6" style="text-decoration:none;font-size:11px;padding:4px 8px;border-radius:5px;background:#1e293b;color:#38bdf8;">C6: Browser</a>
+        <a href="?view=c7" style="text-decoration:none;font-size:11px;padding:4px 8px;border-radius:5px;background:#1e293b;color:#38bdf8;">C7: Relay</a>
+        <div style="font-family:monospace;font-size:11.5px;color:#34d399;border:1px solid #10b981;padding:4px 10px;border-radius:6px;">
+          🖥️ Agent Computer Online
+        </div>
       </div>
     </div>
     ${mainContent}
@@ -295,8 +302,10 @@ const server = http.createServer((req, res) => {
   </aside>
 </body>
 </html>`);
-});
+}
 
-server.listen(PORT, () => {
-  console.log(`Grok Bot Workspace running at http://localhost:${PORT}`);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  http.createServer(requestHandler).listen(PORT, () => {
+    console.log(`Grok Bot Workspace running at http://localhost:${PORT}`);
+  });
+}
