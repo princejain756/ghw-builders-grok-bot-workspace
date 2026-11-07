@@ -1,0 +1,5 @@
+Input_Filter,Event_Name,Dates,Format_Location,Source_URL,Checked_At,Stop_Rule_Status
+topic=AI_and_Cloud;month=Nov_2026,Global Hack Week: Builders Week,Nov 6 - Nov 12 2026,Online Digital,https://www.mlh.com/seasons/2027/events,2026-11-07T16:21:10Z,STOPPED_BEFORE_REGISTRATION
+topic=AI_and_Cloud;month=Nov_2026,Tiger Data Real-Time AI Workshop,Nov 8 2026 14:00 EST,Online Livestream,https://www.mlh.com/events/global-hack-week-builders-week,2026-11-07T16:21:10Z,STOPPED_BEFORE_REGISTRATION
+topic=AI_and_Cloud;month=Nov_2026,Auth0 for AI Agents Deep Dive,Nov 9 2026 16:00 EST,Online Livestream,https://www.mlh.com/events/global-hack-week-builders-week,2026-11-07T16:21:10Z,STOPPED_BEFORE_REGISTRATION
+topic=AI_and_Cloud;month=Nov_2026,SpaceXSI Grok Bot Multi-Agent Relay Lab,Nov 10 2026 18:00 EST,Online Livestream,https://www.mlh.com/partners/spacexsi,2026-11-07T16:21:10Z,STOPPED_BEFORE_REGISTRATION

@@ -1,0 +1,11 @@
+{
+  "name": "ghw-builders-grok-bot-workspace",
+  "version": "1.0.0",
+  "description": "Grok Bot persistent AI teammates, scheduled routines, Campus Opportunities database, repeatable browser workflows, and Two-Bot Launch Relay for MLH GHW Builders Week",
+  "type": "module",
+  "scripts": {
+    "start": "node src/grok-bot-workspace.mjs"
+  },
+  "author": "Prince Jain",
+  "license": "MIT"
+}
